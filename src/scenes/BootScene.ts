@@ -29,6 +29,7 @@ export class BootScene extends Phaser.Scene {
     makeRectTexture(this, "exit-locked", TILE_SIZE, COLORS.exitLocked);
     makeRectTexture(this, "exit-open", TILE_SIZE, COLORS.exitOpen);
     makeCircleTexture(this, "player", TILE_SIZE * 0.8, COLORS.player);
+    makeRectTexture(this, "snake", TILE_SIZE * 0.8, COLORS.snake);
 
     this.registry.set("gameState", new GameState(GEM_COUNT));
 

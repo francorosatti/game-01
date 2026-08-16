@@ -3,6 +3,7 @@ export class GameState {
   gemsCollected = 0;
   readonly totalGemsPerLevel: number;
   exitUnlocked = false;
+  gameOver = false;
 
   constructor(totalGemsPerLevel: number) {
     this.totalGemsPerLevel = totalGemsPerLevel;
@@ -11,6 +12,11 @@ export class GameState {
   resetForNewLevel(): void {
     this.gemsCollected = 0;
     this.exitUnlocked = false;
+    this.gameOver = false;
+  }
+
+  loseGame(): void {
+    this.gameOver = true;
   }
 
   collectGem(): void {

@@ -7,6 +7,8 @@ export const WALL_DENSITY = 0.2;
 export const MAX_GEN_ATTEMPTS = 100;
 
 export const PLAYER_SPEED = 160;
+export const SNAKE_SPEED = 100;
+export const SNAKE_TURN_CHANCE = 0.3;
 
 export const COLORS = {
   background: 0x2b2b3a,
@@ -15,4 +17,5 @@ export const COLORS = {
   exitLocked: 0xaa3333,
   exitOpen: 0x33aa55,
   player: 0x3399ff,
+  snake: 0x33cc66,
 };

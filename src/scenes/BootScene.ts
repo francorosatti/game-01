@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { TILE_SIZE, COLORS, GEM_COUNT } from "../config/gameConfig";
 import { GameState } from "../state/GameState";
+import { loadSnakeEnabled } from "../state/preferences";
 
 function makeRectTexture(scene: Phaser.Scene, key: string, size: number, color: number): void {
   const g = scene.make.graphics({ x: 0, y: 0 }, false);
@@ -31,8 +32,10 @@ export class BootScene extends Phaser.Scene {
     makeCircleTexture(this, "player", TILE_SIZE * 0.8, COLORS.player);
     makeRectTexture(this, "snake", TILE_SIZE * 0.8, COLORS.snake);
 
-    this.registry.set("gameState", new GameState(GEM_COUNT));
+    const gameState = new GameState(GEM_COUNT);
+    gameState.snakeEnabled = loadSnakeEnabled();
+    this.registry.set("gameState", gameState);
 
-    this.scene.start("GameScene");
+    this.scene.start("MenuScene");
   }
 }

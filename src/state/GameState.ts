@@ -4,6 +4,7 @@ export class GameState {
   readonly totalGemsPerLevel: number;
   exitUnlocked = false;
   gameOver = false;
+  snakeEnabled = true;
 
   constructor(totalGemsPerLevel: number) {
     this.totalGemsPerLevel = totalGemsPerLevel;

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { ROOM_COLS, ROOM_ROWS, TILE_SIZE } from "./config/gameConfig";
 import { BootScene } from "./scenes/BootScene";
+import { MenuScene } from "./scenes/MenuScene";
 import { GameScene } from "./scenes/GameScene";
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -15,7 +16,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [BootScene, GameScene],
+  scene: [BootScene, MenuScene, GameScene],
 };
 
 new Phaser.Game(config);

@@ -20,7 +20,7 @@ import { tileCenter } from "../utils/tileCenter";
 export class GameScene extends Phaser.Scene {
   private gameState!: GameState;
   private player!: Player;
-  private snake!: Snake;
+  private snake?: Snake;
   private hud!: Hud;
   private gameOverText!: Phaser.GameObjects.Text;
   private exitSprite!: Phaser.Physics.Arcade.Sprite;
@@ -67,23 +67,26 @@ export class GameScene extends Phaser.Scene {
     const startCenter = tileCenter(room.playerStart.row, room.playerStart.col);
     this.player = new Player(this, startCenter.x, startCenter.y);
 
-    const occupied = new Set<string>([
-      `${room.playerStart.row},${room.playerStart.col}`,
-      `${room.exitPos.row},${room.exitPos.col}`,
-      ...room.gemPositions.map((g) => `${g.row},${g.col}`),
-    ]);
-    const reachable = floodFillReachable(room.grid, room.playerStart);
-    const snakeCandidates = Array.from(reachable)
-      .filter((k) => !occupied.has(k))
-      .map((k) => {
-        const [row, col] = k.split(",").map(Number);
-        return { row, col };
-      });
-    const snakeStart =
-      snakeCandidates.length > 0
-        ? snakeCandidates[Math.floor(Math.random() * snakeCandidates.length)]
-        : room.playerStart;
-    this.snake = new Snake(this, room.grid, snakeStart.row, snakeStart.col);
+    this.snake = undefined;
+    if (this.gameState.snakeEnabled) {
+      const occupied = new Set<string>([
+        `${room.playerStart.row},${room.playerStart.col}`,
+        `${room.exitPos.row},${room.exitPos.col}`,
+        ...room.gemPositions.map((g) => `${g.row},${g.col}`),
+      ]);
+      const reachable = floodFillReachable(room.grid, room.playerStart);
+      const snakeCandidates = Array.from(reachable)
+        .filter((k) => !occupied.has(k))
+        .map((k) => {
+          const [row, col] = k.split(",").map(Number);
+          return { row, col };
+        });
+      const snakeStart =
+        snakeCandidates.length > 0
+          ? snakeCandidates[Math.floor(Math.random() * snakeCandidates.length)]
+          : room.playerStart;
+      this.snake = new Snake(this, room.grid, snakeStart.row, snakeStart.col);
+    }
 
     this.hud = new Hud(this);
     this.hud.update(this.gameState.levelNumber, this.gameState.gemsCollected, this.gameState.totalGemsPerLevel);
@@ -110,13 +113,15 @@ export class GameScene extends Phaser.Scene {
       this,
     );
     this.physics.add.overlap(this.player.sprite, this.exitSprite, () => this.onExitReached(), undefined, this);
-    this.physics.add.overlap(this.player.sprite, this.snake.sprite, () => this.onSnakeTouch(), undefined, this);
+    if (this.snake) {
+      this.physics.add.overlap(this.player.sprite, this.snake.sprite, () => this.onSnakeTouch(), undefined, this);
+    }
   }
 
   update(): void {
     if (this.gameState.gameOver) return;
     this.player.update();
-    this.snake.update();
+    this.snake?.update();
   }
 
   private onGemCollected(gem: Phaser.Physics.Arcade.Sprite): void {
